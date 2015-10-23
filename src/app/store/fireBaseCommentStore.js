@@ -7,7 +7,7 @@ import assign from 'object-assign'
 import Firebase from 'firebase'
 
 var actionTypes = commentConstants.actionTypes;
-var _fbCommentReference = new Firebase('https://jsbincomment.firebaseio.com/comments');
+var _fbCommentReference = new Firebase('https://live-comments.firebaseio.com/comments');
 
 _fbCommentReference.once('value', onDataLoaded);
 _fbCommentReference.on('child_added', onChildAdded);
@@ -21,6 +21,11 @@ var nextTick = function(callback) {
 
 function onDataLoaded(referenceHash) {
 	var hash = referenceHash.val();
+
+	//empty reference
+	if(!hash) {
+		return;
+	}
 
 	//reference id is hash key
 	var commentCollection = Object.keys(hash).map(key => {
@@ -80,8 +85,8 @@ FirebaseStore.dispatchToken = chatDispatcher.register(function(action) {
 	switch(action.type) {
 		case actionTypes.SEND_COMMENT: 
 			chatDispatcher.waitFor([CommentStore.dispatchToken]);
-			var {text, author, appId} = action
-			var comment = {text, author, appId };
+			var {text, author, appId, createdDate} = action;
+			var comment = {text, author, appId, createdDate};
 			_fbCommentReference.push(comment);
 		break;
 
@@ -91,8 +96,9 @@ FirebaseStore.dispatchToken = chatDispatcher.register(function(action) {
 
 		case actionTypes.EDIT_COMMENT: 
 			//chatDispatcher.waitFor([CommentStore.dispatchToken]);
+			var timeStamp = new Date().getTime();
 			var {author, text} = action.comment;
-			var comment = {author, text}
+			var comment = {author, text, editedDate: timeStamp}
 			_fbCommentReference.child(action.comment.id).update(comment);
 		break;
 		default:

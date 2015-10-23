@@ -9,8 +9,12 @@
 		-do we simply mark comment as deleted, but still show it?
 -disallow replying to comment that is yours
 
-update comment object
-rename message to comment
+when authorization is done, add authorId to comment instead of author
 
 
 replying to comment
+-only available if comment has firebaseid
+-comment includes parentId pointing to firebaseId
+-comments without parentId are toplevel comments
+-comments are ordered by toplevel comments created date
+-add createdDate and
