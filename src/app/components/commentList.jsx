@@ -7,7 +7,7 @@ var CommentList = React.createClass({
 		var commentNodes = this.props.data.map(function(comment) {
 			return (
 				<Comment comment={comment} key={comment.appId}  
-						 deleteMessage={self.props.deleteMessage}>
+						 deleteComment={self.props.deleteComment}>
 				</Comment>
 				)
 		})

@@ -1,19 +1,19 @@
 import chatDispatcher from '../dispatcher/chatDispatcher'
-import messageConstants from '../constants/messageConstants'
+import commentConstants from '../constants/commentConstants'
 
-var actionTypes = messageConstants.actionTypes;
+var actionTypes = commentConstants.actionTypes;
 
 export default {
-	enterEditMode: function(messageId) {
+	enterEditMode: function(commentId) {
 		chatDispatcher.dispatch({
 			type: actionTypes.ENTER_EDIT_MODE,
-			messageId
+			commentId
 		})
 	},
-	exitEditMode: function(messageId) {
+	exitEditMode: function(commentId) {
 		chatDispatcher.dispatch({
 			type: actionTypes.EXIT_EDIT_MODE,
-			messageId
+			commentId
 		})
 	}
 }

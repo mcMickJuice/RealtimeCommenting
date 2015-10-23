@@ -1,6 +1,6 @@
 import React from 'react'
 //import CommentStore from './store/commentStore.js'
-import messageActionCreator from '../actions/messageActionCreators'
+import commentActionCreator from '../actions/commentActionCreators'
 
 var CommentForm = React.createClass({
 	handleSubmit: function(e) {
@@ -14,7 +14,7 @@ var CommentForm = React.createClass({
 		//TODO send request to server
 		this.refs.author.value = '';
 		this.refs.text.value = '';
-		messageActionCreator.sendMessage(text, author);
+		commentActionCreator.sendComment(text, author);
 		return;
 	},
 

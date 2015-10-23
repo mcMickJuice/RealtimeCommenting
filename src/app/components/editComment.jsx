@@ -1,6 +1,6 @@
 import React from 'react'
 import EditActions from '../actions/editActionCreators'
-import MessageActions from '../actions/messageActionCreators'
+import CommentActions from '../actions/commentActionCreators'
 import EditStore from '../store/editStore'
 import _ from 'lodash'
 //edit Store to listen for edit state update
@@ -37,14 +37,14 @@ var EditComment = React.createClass({
   		var updatedText = this.refs.commentText.value;
   		var updatedComment = _.extend(this.props.comment, {text: updatedText});
 
-      MessageActions.editMessage(updatedComment);
+      CommentActions.editComment(updatedComment);
   },
 
   getEditTemplate: function () {
   	var state = this.state.editState;
-  	var isEditingCurrentMessage = state.isEditMode && state.messageId === this.props.comment.id;
+  	var isEditingCurrentComment = state.isEditMode && state.commentId === this.props.comment.id;
 
-  	return isEditingCurrentMessage
+  	return isEditingCurrentComment
   		? 
   		<div className="edit-input-container">
   			<textarea ref="commentText" defaultValue={this.props.comment.text} />

@@ -1,13 +1,13 @@
 import React from 'react'
 import CommentList from './commentList.jsx'
 import CommentForm from './commentForm.jsx'
-import MessageStore from '../store/messageStore'
-import FireBaseMessageStore from '../store/fireBaseMessageStore'
-import MessageActions from '../actions/messageActionCreators'
+import CommentStore from '../store/commentStore'
+import FireBaseCommentStore from '../store/fireBaseCommentStore'
+import CommentActions from '../actions/commentActionCreators'
 
 function getStateFromStores() {
 	return {
-		messages: MessageStore.getMessagesForThread()
+		comments: CommentStore.getCommentsForThread()
 	}
 }
 
@@ -17,7 +17,7 @@ function getCommentList(data) {
 			return (
 				<div>
 					<span>Last Update - {now}</span>
-					<CommentList data={data} deleteMessage={MessageActions.deleteMessage}/>
+					<CommentList data={data} deleteComment={CommentActions.deleteComment}/>
 				</div>
 				
 				)
@@ -31,16 +31,16 @@ var CommentBox = React.createClass({
 		return getStateFromStores();
 	},
 	componentDidMount: function() {
-		MessageStore.addChangeListener(this._onChange);
+		CommentStore.addChangeListener(this._onChange);
 	},
 	componentWillUnmount: function() {
-		MessageStore.removeChangeListener(this._onChange);
+		CommentStore.removeChangeListener(this._onChange);
 	},
 	_onChange: function() {
 		this.setState(getStateFromStores())
 	},
 	render: function() {
-		var commentList = getCommentList(this.state.messages);
+		var commentList = getCommentList(this.state.comments);
 
 		return (
 <div className="commentBox">

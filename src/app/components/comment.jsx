@@ -14,8 +14,8 @@ var Comment = React.createClass({
 		return { __html: rawMarkup};
 	},
 
-	onDeleteMessage: function(){
-		this.props.deleteMessage(this.props.comment.id);
+	onDeleteComment: function(){
+		this.props.deleteComment(this.props.comment.id);
 	},
 
 	render: function() {
@@ -28,7 +28,7 @@ var Comment = React.createClass({
 		 		{this.props.comment.author} - <em>on {date}</em>
 		 	</h2>
 		 	<span dangerouslySetInnerHTML={this.rawMarkup()} /> 
-		 	<div onClick={this.onDeleteMessage}>[Delete]</div>
+		 	<div onClick={this.onDeleteComment}>[Delete]</div>
 		 	<EditComment comment={clonedComment}></EditComment>
 		 </div>
 			)
