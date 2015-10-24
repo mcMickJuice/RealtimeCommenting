@@ -6,7 +6,7 @@ import assign from 'object-assign'
 import _ from 'lodash'
 
 var actionTypes = commentConstants.actionTypes;
-var CHANGE_EVENT = 'change';
+var CHANGE_EVENT = commentConstants.eventTypes.CHANGE_EVENT;
 
 //always refer to comments in collection used comment.id NEVER appId. AppId is a temporary key
 //used to update a comment after we get an update from the firebase store with the firebase id
@@ -95,6 +95,19 @@ CommentStore.dispatchToken = chatDispatcher.register(function(action) {
 										createdDate}) 
 			CommentStore.emitChange()
 			break;
+
+		case actionTypes.REPLY_TO_COMMENT:
+			var timeStamp = new Date().getTime();
+			action.comment.appId = timeStamp;
+			action.comment.createdDate = timeStamp;
+			var {text, author, appId, createdDate, parentId} = action.comment;
+
+			var comment = {text, author, appId, createdDate, parentId}
+
+			_pushComment(comment);
+
+			CommentStore.emitChange();
+		break;
 
 		case actionTypes.ON_COMMENT_DELETED_FROM_REFERENCE:
 		 _removeComment(action.commentId)

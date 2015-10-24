@@ -1,9 +1,13 @@
 import React from 'react'
 import EditActions from '../actions/editActionCreators'
+import CommentConstants from '../constants/commentConstants'
 import CommentActions from '../actions/commentActionCreators'
 import EditStore from '../store/editStore'
 import _ from 'lodash'
 //edit Store to listen for edit state update
+
+var ReactPropTypes = React.PropTypes;
+var EDIT_MODE = CommentConstants.modeTypes.EDIT_MODE;
 
 function getStateFromStores() {
 	return {
@@ -12,6 +16,11 @@ function getStateFromStores() {
 }
 
 var EditComment = React.createClass({
+  //TODO require that message is passed in!
+  propTypes: {
+    comment: ReactPropTypes.object.isRequired
+  },
+
 	getInitialState: function() {
 		return getStateFromStores();
 	},
@@ -27,7 +36,7 @@ var EditComment = React.createClass({
 
   //accepts comment as prop
   onCancelEdit: function() {
-      EditActions.exitEditMode(this.props.comment.id);
+      EditActions.exitEditReplyMode();
   },
 
   onEnterEdit: function() {
@@ -42,7 +51,7 @@ var EditComment = React.createClass({
 
   getEditTemplate: function () {
   	var state = this.state.editState;
-  	var isEditingCurrentComment = state.isEditMode && state.commentId === this.props.comment.id;
+  	var isEditingCurrentComment = state.mode === EDIT_MODE && state.commentId === this.props.comment.id;
 
   	return isEditingCurrentComment
   		? 
@@ -60,9 +69,7 @@ var EditComment = React.createClass({
   },
 
   render: function() {
-  	var template = this.props.comment.id 
-  		? this.getEditTemplate() 
-  		: "";
+  	var template = this.getEditTemplate() 
 
   	return (<div className="edit-container">
   		{template}

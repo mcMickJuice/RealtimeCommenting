@@ -10,10 +10,16 @@ export default {
 			commentId
 		})
 	},
-	exitEditMode: function(commentId) {
+	enterReplyMode: function(parentId) {
 		chatDispatcher.dispatch({
-			type: actionTypes.EXIT_EDIT_MODE,
-			commentId
+			type: actionTypes.ENTER_REPLY_MODE,
+			parentId
 		})
-	}
+	},
+	exitEditReplyMode: function() {
+		chatDispatcher.dispatch({
+			type: actionTypes.EXIT_EDIT_REPLY_MODE
+		})
+	},
+
 }

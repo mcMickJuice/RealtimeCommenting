@@ -1,6 +1,7 @@
 import React from 'react'
 import marked from 'marked'
 import EditComment from './editComment.jsx'
+import ReplyComment from './replyComment.jsx'
 import _ from 'lodash'
 
 function _formatDate(milliseconds) {
@@ -17,10 +18,21 @@ var Comment = React.createClass({
 	onDeleteComment: function(){
 		this.props.deleteComment(this.props.comment.id);
 	},
+	getEditOrReplyComponent: function() {
+		//placeholder for now. Just return both
+		var clonedComment = _.clone(this.props.comment)
+
+		return this.props.comment.id 
+			? <div>
+			<EditComment comment={clonedComment} />
+			<ReplyComment parentId={this.props.comment.id} />
+			</div>
+			: ""
+	},
 
 	render: function() {
 		var date = _formatDate(this.props.comment.appId)
-		var clonedComment = _.clone(this.props.comment)
+		var changeComponent = this.getEditOrReplyComponent();
 
 		return (
 		 <div className="comment">
@@ -29,7 +41,8 @@ var Comment = React.createClass({
 		 	</h2>
 		 	<span dangerouslySetInnerHTML={this.rawMarkup()} /> 
 		 	<div onClick={this.onDeleteComment}>[Delete]</div>
-		 	<EditComment comment={clonedComment}></EditComment>
+		 	{changeComponent}
+
 		 </div>
 			)
 	}

@@ -1,6 +1,7 @@
 import chatDispatcher from '../dispatcher/chatDispatcher'
 import commentConstants from '../constants/commentConstants'
 import commentActions from '../actions/commentActionCreators'
+import editActions from '../actions/editActionCreators'
 import CommentStore from './commentStore'
 import {EventEmitter} from 'events'
 import assign from 'object-assign'
@@ -88,11 +89,20 @@ FirebaseStore.dispatchToken = chatDispatcher.register(function(action) {
 			var {text, author, appId, createdDate} = action;
 			var comment = {text, author, appId, createdDate};
 			_fbCommentReference.push(comment);
-		break;
+			break;
+
+		case actionTypes.REPLY_TO_COMMENT:
+			chatDispatcher.waitFor([CommentStore.dispatchToken]);
+			var {text, author, appId, createdDate, parentId} = action.comment;
+			var comment = {text, author, appId, createdDate, parentId};
+			_fbCommentReference.push(comment, function() {
+				editActions.exitEditReplyMode();
+			});
+			break;
 
 		case actionTypes.DELETE_COMMENT:
 			_fbCommentReference.child(action.commentId).remove();
-		break;
+			break;
 
 		case actionTypes.EDIT_COMMENT: 
 			//chatDispatcher.waitFor([CommentStore.dispatchToken]);
@@ -100,7 +110,7 @@ FirebaseStore.dispatchToken = chatDispatcher.register(function(action) {
 			var {author, text} = action.comment;
 			var comment = {author, text, editedDate: timeStamp}
 			_fbCommentReference.child(action.comment.id).update(comment);
-		break;
+			break;
 		default:
 	}
 })

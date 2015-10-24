@@ -1,19 +1,26 @@
 import chatDispatcher from '../dispatcher/chatDispatcher'
-import commentConstants from '../constants/commentConstants'
+import CommentConstants from '../constants/commentConstants'
 import {EventEmitter} from 'events'
 import assign from 'object-assign'
 import CommentStore from './commentStore'
 
-var actionTypes = commentConstants.actionTypes;
-var CHANGE_EVENT = 'change';
+var actionTypes = CommentConstants.actionTypes;
+var CHANGE_EVENT = CommentConstants.eventTypes.CHANGE_EVENT;
+var EDIT_MODE = CommentConstants.modeTypes.EDIT_MODE;
+var REPLY_MODE = CommentConstants.modeTypes.REPLY_MODE;
 
 var _editState = {}
 
 function _setEditState(commentId) {
-	_editState = {commentId, isEditMode: true}
+	_editState = {commentId, mode: EDIT_MODE}
 }
 
-function _removeEditState(commentId) {
+//commentId is parentId
+function _setReplyState(commentId) {
+	_editState = {commentId, mode: REPLY_MODE}
+}
+
+function _resetState() {
 	_editState = {}
 }
 
@@ -38,14 +45,19 @@ EditStore.dispatchToken = chatDispatcher.register(function(action) {
 			_setEditState(action.commentId)
 			EditStore.emitChange();
 		break;
-		case actionTypes.EXIT_EDIT_MODE:
-			_removeEditState(action.commentId)
+		case actionTypes.EXIT_EDIT_REPLY_MODE:
+			_resetState()
+			EditStore.emitChange();
+		break;
+
+		case actionTypes.ENTER_REPLY_MODE:
+			_setReplyState(action.parentId);
 			EditStore.emitChange();
 		break;
 
 		case actionTypes.ON_UPDATED_COMMENT:
 			chatDispatcher.waitFor([CommentStore.dispatchToken])
-			_removeEditState(action.comment.id);
+			_resetState();
 			EditStore.emitChange(CHANGE_EVENT);
 		break;
 		default:

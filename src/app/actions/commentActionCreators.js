@@ -24,6 +24,12 @@ default {
             commentId
         })
     },
+    replyToComment: function(comment) {
+        chatDispatcher.dispatch({
+            type: actionTypes.REPLY_TO_COMMENT,
+            comment
+        })
+    },
     onInitialDataLoad: function(collection) {
         chatDispatcher.dispatch({
             type: actionTypes.ON_INITIAL_DATA_LOAD,

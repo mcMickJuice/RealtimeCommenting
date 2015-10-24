@@ -14,7 +14,6 @@ when authorization is done, add authorId to comment instead of author
 
 replying to comment
 -only available if comment has firebaseid
--comment includes parentId pointing to firebaseId
+-comment includes parentId pointing to firebaseId -- DONE
 -comments without parentId are toplevel comments
 -comments are ordered by toplevel comments created date
--add createdDate and
