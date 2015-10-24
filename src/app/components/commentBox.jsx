@@ -7,7 +7,8 @@ import CommentActions from '../actions/commentActionCreators'
 
 function getStateFromStores() {
 	return {
-		comments: CommentStore.getCommentsForThread()
+		comments: CommentStore.getCommentsForThread(),
+		treeComments: CommentStore.getCommentTree()
 	}
 }
 
@@ -40,7 +41,7 @@ var CommentBox = React.createClass({
 		this.setState(getStateFromStores())
 	},
 	render: function() {
-		var commentList = getCommentList(this.state.comments);
+		var commentList = getCommentList(this.state.treeComments);
 
 		return (
 <div className="commentBox">

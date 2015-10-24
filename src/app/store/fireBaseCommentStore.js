@@ -101,7 +101,9 @@ FirebaseStore.dispatchToken = chatDispatcher.register(function(action) {
 			break;
 
 		case actionTypes.DELETE_COMMENT:
-			_fbCommentReference.child(action.commentId).remove();
+			//not removing comment. We will mark as deleted but keep the comment
+			_fbCommentReference.child(action.commentId).update({deleted:true})
+			// _fbCommentReference.child(action.commentId).remove();
 			break;
 
 		case actionTypes.EDIT_COMMENT: 

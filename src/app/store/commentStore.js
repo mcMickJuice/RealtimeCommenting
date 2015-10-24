@@ -4,6 +4,7 @@ import {EventEmitter} from 'events'
 import Firebase from 'firebase'
 import assign from 'object-assign'
 import _ from 'lodash'
+import {createTreeFromFlatList} from '../common/utility'
 
 var actionTypes = commentConstants.actionTypes;
 var CHANGE_EVENT = commentConstants.eventTypes.CHANGE_EVENT;
@@ -49,9 +50,9 @@ function _pushOrUpdateComment(newComment) {
 	}
 }
 
-function _removeComment(commentId) {
-	_.remove(_commentsList, comment => comment.id === commentId);
-}
+// function _removeComment(commentId) {
+// 	_.remove(_commentsList, comment => comment.id === commentId);
+// }
 
 var _commentsList = [];
 
@@ -77,6 +78,14 @@ var CommentStore = assign({}, EventEmitter.prototype, {
 
 
 		return comments;
+	},
+
+	getCommentTree: function() {
+		const comments = _commentsList.slice(0);
+
+		var treeOfComments = createTreeFromFlatList('id','parentId', comments);
+
+		return treeOfComments;
 	}
 })
 
@@ -93,7 +102,6 @@ CommentStore.dispatchToken = chatDispatcher.register(function(action) {
 										author,
 										appId,
 										createdDate}) 
-			CommentStore.emitChange()
 			break;
 
 		case actionTypes.REPLY_TO_COMMENT:
@@ -105,15 +113,7 @@ CommentStore.dispatchToken = chatDispatcher.register(function(action) {
 			var comment = {text, author, appId, createdDate, parentId}
 
 			_pushComment(comment);
-
-			CommentStore.emitChange();
 		break;
-
-		case actionTypes.ON_COMMENT_DELETED_FROM_REFERENCE:
-		 _removeComment(action.commentId)
-		 CommentStore.emitChange();
-
-		 break;
 
 		case actionTypes.ON_COMMENT_REFERENCE_UPDATE:
 			_pushOrUpdateComment(action.comment);

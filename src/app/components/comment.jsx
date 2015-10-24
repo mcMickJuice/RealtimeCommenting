@@ -3,6 +3,7 @@ import marked from 'marked'
 import EditComment from './editComment.jsx'
 import ReplyComment from './replyComment.jsx'
 import _ from 'lodash'
+import '../styles/comment.less'
 
 function _formatDate(milliseconds) {
 		var date  = new Date(milliseconds);
@@ -33,6 +34,11 @@ var Comment = React.createClass({
 	render: function() {
 		var date = _formatDate(this.props.comment.appId)
 		var changeComponent = this.getEditOrReplyComponent();
+		var isDeleted = this.props.isDeleted;
+
+		if(isDeleted) {
+			return (<div className="deleted">Comment Has Been Deleted</div>)
+		} 
 
 		return (
 		 <div className="comment">
