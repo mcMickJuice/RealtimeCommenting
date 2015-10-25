@@ -9,9 +9,9 @@ var CommentList = React.createClass({
 		var deleteFunc = this.props.deleteComment.bind(this);
 
 		function buildCommentBlock(comment) {
-			// if(comment.deleted) {
-			// 	return (<div key={comment.appId} className="deleted">Comment Has Been Deleted</div>)
-			// }
+			if(comment.deleted) {
+				return (<div key={comment.appId} className="deleted">Comment Has Been Deleted</div>)
+			}
 
 			var childrenComments;
 			if(comment.children) {
@@ -19,7 +19,7 @@ var CommentList = React.createClass({
 			} else {
 				return (
 					<div className="comment-group" key={comment.appId}>
-						<Comment comment={comment}  isDeleted={comment.deleted}
+						<Comment comment={comment} 
 								 deleteComment={deleteFunc}>
 						</Comment>	
 				</div>

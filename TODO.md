@@ -16,5 +16,3 @@ replying to comment
 - comment includes parentId pointing to firebaseId -- DONE
 - comments without parentId are toplevel comments - DONE
 - comments are ordered by toplevel comments created date
-
-empty comment section, adding comment doesn't show up

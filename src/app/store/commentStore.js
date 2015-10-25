@@ -24,7 +24,6 @@ function _pushComment(comment) {
 }
 
 function _updateComment(newComment) {
-	//find index and comment
 	var foundIndex,
 				commentToUpdate;
 
@@ -42,20 +41,14 @@ function _updateComment(newComment) {
 }
 
 function _pushOrUpdateComment(newComment) {
-	//how do I update comment thats been added? need to create reference when first created?
 	var comment = _.find(_commentsList, comment => comment.appId === newComment.appId);
 
 	if(comment) {
 		comment.id = newComment.id
 	} else {
-		//push comment
 		_pushComment(newComment);
 	}
 }
-
-// function _removeComment(commentId) {
-// 	_.remove(_commentsList, comment => comment.id === commentId);
-// }
 
 var _commentsList = [];
 
@@ -74,15 +67,6 @@ var CommentStore = assign({}, EventEmitter.prototype, {
 
 		return comment;
 	},
-	//is this needed? Unless we're only grabbing x amount of comments. We're always in the context of an article
-	getCommentsForThread: function(threadId) {
-		// const comments = _commentsList.filter(comment => comment.threadId === threadId);
-		const comments = _commentsList.slice(0);
-
-
-		return comments;
-	},
-
 	getCommentTree: function() {
 		const comments = _commentsList.slice(0).sort(_commentSortByDateDescending);
 

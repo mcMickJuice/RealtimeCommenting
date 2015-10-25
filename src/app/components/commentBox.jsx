@@ -7,7 +7,6 @@ import CommentActions from '../actions/commentActionCreators'
 
 function getStateFromStores() {
 	return {
-		comments: CommentStore.getCommentsForThread(),
 		treeComments: CommentStore.getCommentTree()
 	}
 }
