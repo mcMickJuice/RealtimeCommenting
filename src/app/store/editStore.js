@@ -2,7 +2,7 @@ import chatDispatcher from '../dispatcher/chatDispatcher'
 import CommentConstants from '../constants/commentConstants'
 import {EventEmitter} from 'events'
 import assign from 'object-assign'
-import CommentStore from './commentStore'
+import tokenStoreProvider from './dispatchTokenStoreProvider'
 
 var actionTypes = CommentConstants.actionTypes;
 var CHANGE_EVENT = CommentConstants.eventTypes.CHANGE_EVENT;
@@ -39,7 +39,8 @@ var EditStore = assign({}, EventEmitter.prototype, {
 	}
 })
 
-EditStore.dispatchToken = chatDispatcher.register(function(action) {
+const dispatchToken = chatDispatcher.register(function(action) {
+	var commentStoreToken = tokenStoreProvider.get('commentStore')
 	switch(action.type) {
 		case actionTypes.ENTER_EDIT_MODE:
 			_setEditState(action.commentId)
@@ -61,7 +62,7 @@ EditStore.dispatchToken = chatDispatcher.register(function(action) {
 		break;
 
 		case actionTypes.ON_UPDATED_COMMENT:
-			chatDispatcher.waitFor([CommentStore.dispatchToken])
+			chatDispatcher.waitFor([commentStoreToken])
 			console.log('CHANGE - ON_UPDATED_COMMENT')
 			
 			_resetState();
@@ -70,5 +71,7 @@ EditStore.dispatchToken = chatDispatcher.register(function(action) {
 		default:
 	}
 })
+
+tokenStoreProvider.registerToken('editStore', dispatchToken)
 
 export default EditStore

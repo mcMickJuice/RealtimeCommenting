@@ -2,10 +2,10 @@ import chatDispatcher from '../dispatcher/chatDispatcher'
 import commentConstants from '../constants/commentConstants'
 import commentActions from '../actions/commentActionCreators'
 import editActions from '../actions/editActionCreators'
-import CommentStore from './commentStore'
 import {EventEmitter} from 'events'
 import assign from 'object-assign'
 import Firebase from 'firebase'
+import tokenStoreProvider from './dispatchTokenStoreProvider'
 
 var actionTypes = commentConstants.actionTypes;
 var _fbCommentReference = new Firebase('https://live-comments.firebaseio.com/comments');
@@ -83,17 +83,18 @@ var FirebaseStore = assign({}, EventEmitter.prototype, {
 	}
 })
 
-FirebaseStore.dispatchToken = chatDispatcher.register(function(action) {
+const dispatchToken = chatDispatcher.register(function(action) {
+	var commentStoreToken = tokenStoreProvider.get('commentStore');
 	switch(action.type) {
 		case actionTypes.SEND_COMMENT: 
-			chatDispatcher.waitFor([CommentStore.dispatchToken]);
+			chatDispatcher.waitFor([commentStoreToken]);
 			var {text, author, appId, createdDate} = action;
 			var comment = {text, author, appId, createdDate};
 			_fbCommentReference.push(comment);
 			break;
 
 		case actionTypes.REPLY_TO_COMMENT:
-			chatDispatcher.waitFor([CommentStore.dispatchToken]);
+			chatDispatcher.waitFor([commentStoreToken]);
 			var {text, author, appId, createdDate, parentId} = action.comment;
 			var comment = {text, author, appId, createdDate, parentId};
 			_fbCommentReference.push(comment, function() {
@@ -117,3 +118,7 @@ FirebaseStore.dispatchToken = chatDispatcher.register(function(action) {
 		default:
 	}
 })
+
+tokenStoreProvider.registerToken('fireBaseCommentStore', dispatchToken)
+
+export default FirebaseStore

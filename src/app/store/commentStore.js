@@ -1,10 +1,10 @@
 import chatDispatcher from '../dispatcher/chatDispatcher'
 import commentConstants from '../constants/commentConstants'
 import {EventEmitter} from 'events'
-import Firebase from 'firebase'
 import assign from 'object-assign'
 import _ from 'lodash'
 import {createTreeFromFlatList} from '../common/utility'
+import tokenStoreProvider from './dispatchTokenStoreProvider'
 
 var actionTypes = commentConstants.actionTypes;
 var CHANGE_EVENT = commentConstants.eventTypes.CHANGE_EVENT;
@@ -93,7 +93,7 @@ var CommentStore = assign({}, EventEmitter.prototype, {
 	}
 })
 
-CommentStore.dispatchToken = chatDispatcher.register(function(action) {
+const dispatchToken = chatDispatcher.register(function(action) {
 	switch(action.type) {
 		case actionTypes.SEND_COMMENT:
 			var timeStamp = new Date().getTime();
@@ -142,5 +142,7 @@ CommentStore.dispatchToken = chatDispatcher.register(function(action) {
 		default:
 	}
 })
+
+tokenStoreProvider.registerToken('commentStore', dispatchToken)
 
 export default CommentStore
