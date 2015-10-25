@@ -60,11 +60,12 @@ function onChildAdded(snapshot, previousChildKey) {
 }
 
 function onChildUpdated(snapshot) {
-	var {text, author, appId} = snapshot.val();
+	var {text, author, appId, editedDate} = snapshot.val();
 	var comment = {
 		text,
 		author,
 		appId,
+		editedDate,
 		id: snapshot.key()
 	}
 
