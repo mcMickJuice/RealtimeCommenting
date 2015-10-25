@@ -22,7 +22,9 @@ var EditComment = React.createClass({
   },
 
 	getInitialState: function() {
-		return getStateFromStores();
+    var editState = getStateFromStores();
+    editState.text = this.props.comment.text;
+		return editState;
 	},
 	componentDidMount: function() {
 		EditStore.addChangeListener(this._onChange);
@@ -48,15 +50,19 @@ var EditComment = React.createClass({
 
       CommentActions.editComment(updatedComment);
   },
+  handleTextChange: function(e) {
+    this.setState({text: e.target.value});
+  },
 
   getEditTemplate: function () {
   	var state = this.state.editState;
+    var textVal = this.state.text;
   	var isEditingCurrentComment = state.mode === EDIT_MODE && state.commentId === this.props.comment.id;
 
   	return isEditingCurrentComment
   		? 
   		<div className="edit-input-container">
-  			<textarea ref="commentText" defaultValue={this.props.comment.text} />
+  			<textarea ref="commentText" value={textVal} onChange={this.handleTextChange} />
 	  		<div className="btn-group">
 					<button type="button" onClick={this.onSubmit}>Submit Changes</button>
 				  <button type="button" onClick={this.onCancelEdit}>Cancel Changes</button>
