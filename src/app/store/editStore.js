@@ -43,20 +43,27 @@ EditStore.dispatchToken = chatDispatcher.register(function(action) {
 	switch(action.type) {
 		case actionTypes.ENTER_EDIT_MODE:
 			_setEditState(action.commentId)
+			console.log('CHANGE - ENTER_EDIT_MODE')
 			EditStore.emitChange();
 		break;
 		case actionTypes.EXIT_EDIT_REPLY_MODE:
 			_resetState()
+			console.log('CHANGE - EXIT_EDIT_REPLY_MODE')
+
 			EditStore.emitChange();
 		break;
 
 		case actionTypes.ENTER_REPLY_MODE:
 			_setReplyState(action.parentId);
+			console.log('CHANGE - ENTER_REPLY_MODE')
+
 			EditStore.emitChange();
 		break;
 
 		case actionTypes.ON_UPDATED_COMMENT:
 			chatDispatcher.waitFor([CommentStore.dispatchToken])
+			console.log('CHANGE - ON_UPDATED_COMMENT')
+			
 			_resetState();
 			EditStore.emitChange(CHANGE_EVENT);
 		break;

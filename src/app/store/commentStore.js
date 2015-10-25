@@ -84,6 +84,7 @@ var CommentStore = assign({}, EventEmitter.prototype, {
 		const comments = _commentsList.slice(0);
 
 		var treeOfComments = createTreeFromFlatList('id','parentId', comments);
+		console.log(treeOfComments)
 
 		return treeOfComments;
 	}
@@ -117,17 +118,20 @@ CommentStore.dispatchToken = chatDispatcher.register(function(action) {
 
 		case actionTypes.ON_COMMENT_REFERENCE_UPDATE:
 			_pushOrUpdateComment(action.comment);
+			console.log('CHANGE - ON_COMMENT_REFERENCE_UPDATE')
 			CommentStore.emitChange();
 		break;
 
 		case actionTypes.ON_INITIAL_DATA_LOAD:
 			var collection = action.collection;
 			_setInternalComments(collection);
+			console.log('CHANGE - ON_INITIAL_DATA_LOAD')
 			CommentStore.emitChange();
 		break;
 
 		case actionTypes.ON_UPDATED_COMMENT:
 			_updateComment(action.comment);
+			console.log('CHANGE - ON_UPDATED_COMMENT')
 
 			CommentStore.emitChange();
 		break;

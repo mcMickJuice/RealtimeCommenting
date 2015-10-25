@@ -5,10 +5,8 @@ import '../styles/commentList.less'
 var CommentList = React.createClass({
 
 	buildTree: function(deleteFunc) {
-		console.log('build tree run')
 		var tree = this.props.data;
 		var deleteFunc = this.props.deleteComment.bind(this);
-		console.log(tree);
 
 		function buildCommentBlock(comment) {
 			// if(comment.deleted) {

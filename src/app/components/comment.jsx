@@ -28,7 +28,7 @@ var Comment = React.createClass({
 			<EditComment comment={clonedComment} />
 			<ReplyComment parentId={this.props.comment.id} />
 			</div>
-			: ""
+			: false
 	},
 
 	render: function() {
