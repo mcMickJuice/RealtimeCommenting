@@ -13,13 +13,15 @@ import _ from 'lodash'
  */
 function createTreeFromFlatList(itemIdName, parentIdName, list) {
 	//represent list with ids as keys
-	const listMap = list.reduce((acc, next) => {
+	var clonedList = _.clone(list, true);
+
+	const listMap = clonedList.reduce((acc, next) => {
 		var key = next[itemIdName]
 		acc[key] = next;
 		return acc;
 	}, {});
 
-	list.forEach(item => {
+	clonedList.forEach(item => {
 		if(!item[parentIdName]) {
 			return;
 		}
@@ -33,7 +35,7 @@ function createTreeFromFlatList(itemIdName, parentIdName, list) {
 		parent.children.push(item);
 	})
 
-	var topLevelNodes = list.filter(item => {
+	var topLevelNodes = clonedList.filter(item => {
 		return !item[parentIdName];
 	})
 
