@@ -22,6 +22,8 @@ var nextTick = function(callback) {
 
 function onDataLoaded(referenceHash) {
 	var hash = referenceHash.val();
+	initialDataSent = true;
+
 
 	//empty reference
 	if(!hash) {
@@ -36,7 +38,6 @@ function onDataLoaded(referenceHash) {
 	})
 
 	commentActions.onInitialDataLoad(commentCollection);
-	initialDataSent = true;
 }
 
 function onChildAdded(snapshot, previousChildKey) {
