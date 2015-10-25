@@ -11,6 +11,9 @@ var CHANGE_EVENT = commentConstants.eventTypes.CHANGE_EVENT;
 
 //always refer to comments in collection used comment.id NEVER appId. AppId is a temporary key
 //used to update a comment after we get an update from the firebase store with the firebase id
+function _commentSortByDateDescending(a,b) {
+	return b.createdDate - a.createdDate;
+}
 
 function _setInternalComments(commentCollection) {
 	_commentsList = commentCollection;
@@ -81,7 +84,7 @@ var CommentStore = assign({}, EventEmitter.prototype, {
 	},
 
 	getCommentTree: function() {
-		const comments = _commentsList.slice(0);
+		const comments = _commentsList.slice(0).sort(_commentSortByDateDescending);
 
 		var treeOfComments = createTreeFromFlatList('id','parentId', comments);
 		console.log(treeOfComments)
