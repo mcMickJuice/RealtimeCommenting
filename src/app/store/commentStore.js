@@ -71,7 +71,6 @@ var CommentStore = assign({}, EventEmitter.prototype, {
 		const comments = _commentsList.slice(0).sort(_commentSortByDateDescending);
 
 		var treeOfComments = createTreeFromFlatList('id','parentId', comments);
-		console.log(treeOfComments)
 
 		return treeOfComments;
 	}
