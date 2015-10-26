@@ -21,13 +21,13 @@ _fbCommentReference.on('child_changed', onChildUpdated);
 var initialDataSent = false;
 
 function createNewMessageFromSnapshot(snapshot) {
-	var {text, author, appId, createdDate} = snapshot.val(),
+	var {text, author, clientId, createdDate} = snapshot.val(),
 		  key = snapshot.key(); 
 
 	var comment = {
 		text,
 		author,
-		appId,
+		clientId,
 		createdDate,
 		id: key
 	};
@@ -36,13 +36,13 @@ function createNewMessageFromSnapshot(snapshot) {
 }
 
 function createUpdatedMessageFromSnapshot(snapshot) {
-	var {text, author, appId, editedDate, deleted} = snapshot.val(),
+	var {text, author, clientId, editedDate, deleted} = snapshot.val(),
 		key = snapshot.key();
 
 	var comment = {
 		text,
 		author,
-		appId,
+		clientId,
 		editedDate,
 		deleted,
 		id: key
@@ -101,15 +101,15 @@ const dispatchToken = chatDispatcher.register(function(action) {
 	switch(action.type) {
 		case actionTypes.SEND_COMMENT: 
 			chatDispatcher.waitFor([commentStoreToken]);
-			var {text, author, appId, createdDate} = action;
-			var comment = {text, author, appId, createdDate};
+			var {text, author, clientId, createdDate} = action;
+			var comment = {text, author, clientId, createdDate};
 			_fbCommentReference.push(comment);
 			break;
 
 		case actionTypes.REPLY_TO_COMMENT:
 			chatDispatcher.waitFor([commentStoreToken]);
-			var {text, author, appId, createdDate, parentId} = action.comment;
-			var comment = {text, author, appId, createdDate, parentId};
+			var {text, author, clientId, createdDate, parentId} = action.comment;
+			var comment = {text, author, clientId, createdDate, parentId};
 			_fbCommentReference.push(comment, function() {
 				editActions.exitEditReplyMode();
 			});

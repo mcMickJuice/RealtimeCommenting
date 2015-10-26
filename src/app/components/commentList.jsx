@@ -10,7 +10,7 @@ var CommentList = React.createClass({
 
 		function buildCommentBlock(comment) {
 			if(comment.deleted) {
-				return (<div key={comment.appId} className="deleted">Comment Has Been Deleted</div>)
+				return (<div key={comment.clientId} className="deleted">Comment Has Been Deleted</div>)
 			}
 
 			var childrenComments;
@@ -18,7 +18,7 @@ var CommentList = React.createClass({
 				childrenComments = comment.children.map(buildCommentBlock);
 			} else {
 				return (
-					<div className="comment-group" key={comment.appId}>
+					<div className="comment-group" key={comment.clientId}>
 						<Comment comment={comment} 
 								 deleteComment={deleteFunc}>
 						</Comment>	
@@ -28,7 +28,7 @@ var CommentList = React.createClass({
 			
 
 			return (
-				<div className="comment-group" key={comment.appId} >
+				<div className="comment-group" key={comment.clientId} >
 						<Comment comment={comment}  
 								 deleteComment={deleteFunc}>
 						</Comment>	

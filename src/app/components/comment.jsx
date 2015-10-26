@@ -32,7 +32,7 @@ var Comment = React.createClass({
 	},
 
 	render: function() {
-		var date = _formatDate(this.props.comment.appId)
+		var date = _formatDate(this.props.comment.clientId)
 		var changeComponent = this.getEditOrReplyComponent();
 
 		return (

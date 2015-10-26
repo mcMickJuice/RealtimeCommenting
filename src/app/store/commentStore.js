@@ -9,7 +9,7 @@ import tokenStoreProvider from './dispatchTokenStoreProvider'
 var actionTypes = commentConstants.actionTypes;
 var CHANGE_EVENT = commentConstants.eventTypes.CHANGE_EVENT;
 
-//always refer to comments in collection used comment.id NEVER appId. AppId is a temporary key
+//always refer to comments in collection used comment.id NEVER clientId. ClientId is a temporary key
 //used to update a comment after we get an update from the firebase store with the firebase id
 function _commentSortByDateDescending(a,b) {
 	return b.createdDate - a.createdDate;
@@ -41,7 +41,7 @@ function _updateComment(newComment) {
 }
 
 function _pushOrUpdateComment(newComment) {
-	var comment = _.find(_commentsList, comment => comment.appId === newComment.appId);
+	var comment = _.find(_commentsList, comment => comment.clientId === newComment.clientId);
 
 	if(comment) {
 		comment.id = newComment.id
@@ -82,23 +82,23 @@ const dispatchToken = chatDispatcher.register(function(action) {
 		case actionTypes.SEND_COMMENT:
 			var timeStamp = new Date().getTime();
 			//append this on action to flow to next store that needs it (e.g. firebase store)?
-			action.appId = timeStamp;
+			action.clientId = timeStamp;
 			action.createdDate = timeStamp
-			var {text, author, appId, createdDate} = action;
+			var {text, author, clientId, createdDate} = action;
 
 			_pushComment({text, 
 										author,
-										appId,
+										clientId,
 										createdDate}) 
 			break;
 
 		case actionTypes.REPLY_TO_COMMENT:
 			var timeStamp = new Date().getTime();
-			action.comment.appId = timeStamp;
+			action.comment.clientId = timeStamp;
 			action.comment.createdDate = timeStamp;
-			var {text, author, appId, createdDate, parentId} = action.comment;
+			var {text, author, clientId, createdDate, parentId} = action.comment;
 
-			var comment = {text, author, appId, createdDate, parentId}
+			var comment = {text, author, clientId, createdDate, parentId}
 
 			_pushComment(comment);
 		break;
