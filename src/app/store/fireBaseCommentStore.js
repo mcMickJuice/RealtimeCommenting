@@ -6,18 +6,49 @@ import {EventEmitter} from 'events'
 import assign from 'object-assign'
 import Firebase from 'firebase'
 import tokenStoreProvider from './dispatchTokenStoreProvider'
+import {nextTick} from '../common/utility'
 
 var actionTypes = commentConstants.actionTypes;
 var _fbCommentReference = new Firebase('https://live-comments.firebaseio.com/comments');
 
 _fbCommentReference.once('value', onDataLoaded);
 _fbCommentReference.on('child_added', onChildAdded);
+//not using remove as it's a little complicated with having a comment tree
+//would rather filter comments out
 //_fbCommentReference.on('child_removed', onChildRemoved);
 _fbCommentReference.on('child_changed', onChildUpdated);
 	
 var initialDataSent = false;
-var nextTick = function(callback) {
-	setTimeout(callback,0);
+
+function createNewMessageFromSnapshot(snapshot) {
+	var {text, author, appId, createdDate} = snapshot.val(),
+		  key = snapshot.key(); 
+
+	var comment = {
+		text,
+		author,
+		appId,
+		createdDate,
+		id: key
+	};
+
+	return comment
+}
+
+function createUpdatedMessageFromSnapshot(snapshot) {
+	var {text, author, appId, editedDate, deleted} = snapshot.val(),
+		key = snapshot.key();
+
+	var comment = {
+		text,
+		author,
+		appId,
+		editedDate,
+		deleted,
+		id: key
+	};
+
+	return comment;
 }
 
 function onDataLoaded(referenceHash) {
@@ -45,14 +76,7 @@ function onChildAdded(snapshot, previousChildKey) {
 		return;
 	}
 
-	var {text, author, appId} = snapshot.val(),
-		  key = snapshot.key();
-	var comment = {
-		text,
-		author,
-		appId,
-		id:key
-	};
+	var comment = createNewMessageFromSnapshot(snapshot);
 
 	//persisted comment with key, should call out to stores that care about
 	//new or created comments
@@ -61,23 +85,10 @@ function onChildAdded(snapshot, previousChildKey) {
 }
 
 function onChildUpdated(snapshot) {
-	var {text, author, appId, editedDate, deleted} = snapshot.val();
-	var comment = {
-		text,
-		author,
-		appId,
-		editedDate,
-		deleted,
-		id: snapshot.key()
-	}
+	var comment = createUpdatedMessageFromSnapshot(snapshot);
 
 	nextTick(() => commentActions.onUpdatedComment(comment));
 }
-
-// function onChildRemoved(snapshot) {
-// 	var commentId = snapshot.key();
-// 	nextTick(() => commentActions.onCommentDeletedFromReference(commentId));
-// }
 
 var FirebaseStore = assign({}, EventEmitter.prototype, {
 	emitChange: function() {

@@ -42,6 +42,11 @@ function createTreeFromFlatList(itemIdName, parentIdName, list) {
 	return topLevelNodes;
 }
 
+function nextTick(callback) {
+	setTimeout(callback,0);
+}
+
 export default {
-	createTreeFromFlatList
+	createTreeFromFlatList,
+	nextTick
 }
