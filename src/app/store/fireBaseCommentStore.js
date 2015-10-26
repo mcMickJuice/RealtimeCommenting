@@ -12,7 +12,7 @@ var _fbCommentReference = new Firebase('https://live-comments.firebaseio.com/com
 
 _fbCommentReference.once('value', onDataLoaded);
 _fbCommentReference.on('child_added', onChildAdded);
-_fbCommentReference.on('child_removed', onChildRemoved);
+//_fbCommentReference.on('child_removed', onChildRemoved);
 _fbCommentReference.on('child_changed', onChildUpdated);
 	
 var initialDataSent = false;
@@ -61,22 +61,23 @@ function onChildAdded(snapshot, previousChildKey) {
 }
 
 function onChildUpdated(snapshot) {
-	var {text, author, appId, editedDate} = snapshot.val();
+	var {text, author, appId, editedDate, deleted} = snapshot.val();
 	var comment = {
 		text,
 		author,
 		appId,
 		editedDate,
+		deleted,
 		id: snapshot.key()
 	}
 
 	nextTick(() => commentActions.onUpdatedComment(comment));
 }
 
-function onChildRemoved(snapshot) {
-	var commentId = snapshot.key();
-	nextTick(() => commentActions.onCommentDeletedFromReference(commentId));
-}
+// function onChildRemoved(snapshot) {
+// 	var commentId = snapshot.key();
+// 	nextTick(() => commentActions.onCommentDeletedFromReference(commentId));
+// }
 
 var FirebaseStore = assign({}, EventEmitter.prototype, {
 	emitChange: function() {
