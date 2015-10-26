@@ -4,9 +4,10 @@ import '../styles/commentList.less'
 
 var CommentList = React.createClass({
 
-	buildTree: function(deleteFunc) {
+	buildTree: function() {
 		var tree = this.props.data;
 		var deleteFunc = this.props.deleteComment.bind(this);
+		var editState = this.props.editState;
 
 		function buildCommentBlock(comment) {
 			if(comment.deleted) {
@@ -20,7 +21,8 @@ var CommentList = React.createClass({
 				return (
 					<div className="comment-group" key={comment.clientId}>
 						<Comment comment={comment} 
-								 deleteComment={deleteFunc}>
+								 deleteComment={deleteFunc}
+								 editState={editState}>
 						</Comment>	
 				</div>
 					)
@@ -30,7 +32,8 @@ var CommentList = React.createClass({
 			return (
 				<div className="comment-group" key={comment.clientId} >
 						<Comment comment={comment}  
-								 deleteComment={deleteFunc}>
+								 deleteComment={deleteFunc}
+								 editState={editState}>
 						</Comment>	
 						<div className="comment-children">
 							{childrenComments}

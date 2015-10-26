@@ -2,7 +2,7 @@ import React from 'react'
 import EditActions from '../actions/editActionCreators'
 import CommentConstants from '../constants/commentConstants'
 import CommentActions from '../actions/commentActionCreators'
-import EditStore from '../store/editStore'
+// import EditStore from '../store/editStore'
 
 var ReactPropTypes = React.PropTypes;
 var REPLY_MODE = CommentConstants.modeTypes.REPLY_MODE;
@@ -12,49 +12,47 @@ var REPLY_MODE = CommentConstants.modeTypes.REPLY_MODE;
 
 //user can only edit or reply to a comment, they can't do both
 
-function getStateFromStores() {
-	return {
-		replyState: EditStore.getState()
-	}
-}
+var initialState = {text: ''};
 
 var ReplyComment = React.createClass({
 	propTypes: {
-		parentId: ReactPropTypes.string.isRequired
+		parentId: ReactPropTypes.string.isRequired,
+		editState: ReactPropTypes.object.isRequired
 	},
 	getInitialState: function() {
-		return getStateFromStores();
+		return initialState;
 	},
-	componentDidMount: function() {
-		EditStore.addChangeListener(this._onChange);
-	},
-	componentWillUnmount: function() {
-		EditStore.removeChangeListener(this._onChange);
-	},
-	_onChange: function() {
-		this.setState(getStateFromStores())
+	resetState: function() {
+		this.setState(initialState);
 	},
 	onCancelReply: function() {
 		EditActions.exitEditReplyMode();
+		this.resetState();
 	},
 	onEnterReply: function() {
 		EditActions.enterReplyMode(this.props.parentId);
 	},
 	onSubmit: function() {
-		var text = this.refs.commentText.value;
+		var text = this.state.text;
 		var comment = {parentId: this.props.parentId, text, author: 'Replier!'}
 
 		CommentActions.replyToComment(comment);
+		this.resetState();
+	},
+	handleTextChange: function(e) {
+		var text = e.target.value;
+		this.setState({text})
 	},
 	getReplyTemplate: function() {
-		var state = this.state.replyState;
+		var state = this.props.editState;
+		var text = this.state.text;
 		var isReplyingToCurrentComment = state.mode === REPLY_MODE && state.commentId === this.props.parentId;
 	
 
 		return isReplyingToCurrentComment
 		?
 		<div className="reply-input-container">
-			<textarea ref="commentText" placeholder="Your reply here"/>
+			<textarea ref="commentText" value={text} placeholder="Your reply here" onChange={this.handleTextChange}/>
 			<div className="btn-group">
 					<button type="button" onClick={this.onSubmit}>Submit Reply</button>
 				  <button type="button" onClick={this.onCancelReply}>Cancel</button>

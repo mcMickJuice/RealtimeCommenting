@@ -25,8 +25,8 @@ var Comment = React.createClass({
 
 		return this.props.comment.id 
 			? <div>
-			<EditComment comment={clonedComment} />
-			<ReplyComment parentId={this.props.comment.id} />
+			<EditComment comment={clonedComment} editState={this.props.editState}/>
+			<ReplyComment parentId={this.props.comment.id} editState={this.props.editState}/>
 			</div>
 			: false
 	},

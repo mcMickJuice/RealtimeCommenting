@@ -2,7 +2,6 @@ import React from 'react'
 import EditActions from '../actions/editActionCreators'
 import CommentConstants from '../constants/commentConstants'
 import CommentActions from '../actions/commentActionCreators'
-import EditStore from '../store/editStore'
 import _ from 'lodash'
 //edit Store to listen for edit state update
 
@@ -18,26 +17,16 @@ function getStateFromStores() {
 var EditComment = React.createClass({
   //TODO require that message is passed in!
   propTypes: {
-    comment: ReactPropTypes.object.isRequired
+    comment: ReactPropTypes.object.isRequired,
+    editState: ReactPropTypes.object.isRequired
   },
-
-	getInitialState: function() {
-    var editState = getStateFromStores();
-    editState.text = this.props.comment.text;
-		return editState;
-	},
-	componentDidMount: function() {
-		EditStore.addChangeListener(this._onChange);
-	},
-	componentWillUnmount: function() {
-		EditStore.removeChangeListener(this._onChange);
-	},
-	_onChange: function() {
-		this.setState(getStateFromStores());
-	},
-
-  //accepts comment as prop
+  getInitialState: function() {
+    var text = this.props.comment.text;
+    return {text}
+  },
   onCancelEdit: function() {
+      var initialState = this.getInitialState();
+      this.setState(initialState);
       EditActions.exitEditReplyMode();
   },
 
@@ -45,7 +34,7 @@ var EditComment = React.createClass({
       EditActions.enterEditMode(this.props.comment.id)
   },
   onSubmit: function() {
-  		var updatedText = this.refs.commentText.value;
+  		var updatedText = this.state.text;
   		var updatedComment = _.extend(this.props.comment, {text: updatedText});
 
       CommentActions.editComment(updatedComment);
@@ -55,14 +44,14 @@ var EditComment = React.createClass({
   },
 
   getEditTemplate: function () {
-  	var state = this.state.editState;
+  	var state = this.props.editState;
     var textVal = this.state.text;
   	var isEditingCurrentComment = state.mode === EDIT_MODE && state.commentId === this.props.comment.id;
 
   	return isEditingCurrentComment
   		? 
   		<div className="edit-input-container">
-  			<textarea ref="commentText" value={textVal} onChange={this.handleTextChange} />
+  			<textarea value={textVal} onChange={this.handleTextChange} />
 	  		<div className="btn-group">
 					<button type="button" onClick={this.onSubmit}>Submit Changes</button>
 				  <button type="button" onClick={this.onCancelEdit}>Cancel Changes</button>
