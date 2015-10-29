@@ -34,16 +34,16 @@ class FirebaseFactory {
 	}
 
 	push(object, callback) {
-		var func = callback || noop;
-		this._reference.push(object,noop)
+		callback = callback || noop;
+		this._reference.push(object,callback)
 	}
 
 	update(object, referenceId, callback) {
-		var func = callback || noop;
+		callback = callback || noop;
 		if(referenceId && referenceId.length > 0){
-			this._reference.child(referenceId).update(object, func);
+			this._reference.child(referenceId).update(object, callback);
 		} else {
-			this._reference.update(object, func)
+			this._reference.update(object, callback)
 		}
 	}
 }
