@@ -9,13 +9,6 @@ import {nextTick} from '../common/utility'
 import firebaseService from './services/firebaseService'
 
 var actionTypes = commentConstants.actionTypes;
-
-var refUrl = 'https://live-comments.firebaseio.com/comments';
-var firebaseInst = new firebaseService(refUrl);
-
-firebaseInst.onceValue(onDataLoaded)
-firebaseInst.onAdded(onChildAdded)
-firebaseInst.onUpdated(onChildUpdated)
 	
 var initialDataSent = false;
 
@@ -87,14 +80,22 @@ function onChildUpdated(snapshot) {
 	commentActions.onUpdatedComment(comment);
 }
 
-//umm why do i even need to do this?
-var FirebaseStore = assign({}, EventEmitter.prototype, {
-	emitChange: function() {
+var _firebaseInst;
 
-	}
-})
+function FirebaseStore(referenceUrl) {
+	_firebaseInst = new firebaseService(referenceUrl);
+}
 
-const dispatchToken = chatDispatcher.register(function(action) {
+FirebaseStore.prototype.startListening = function() {
+		_firebaseInst.onceValue(onDataLoaded)
+		_firebaseInst.onAdded(onChildAdded)
+		_firebaseInst.onUpdated(onChildUpdated)
+
+		_registerWithDispatcher();
+}
+
+function _registerWithDispatcher() {
+	const dispatchToken = chatDispatcher.register(function(action) {
 	var commentStoreToken = tokenStoreProvider.get('commentStore');
 	switch(action.type) {
 		case actionTypes.SEND_COMMENT: 
@@ -102,7 +103,7 @@ const dispatchToken = chatDispatcher.register(function(action) {
 			var {text, author, clientId, createdDate} = action;
 			var comment = {text, author, clientId, createdDate};
 			// _fbCommentReference.push(comment);
-			firebaseInst.push(comment);
+			_firebaseInst.push(comment);
 			break;
 
 		case actionTypes.REPLY_TO_COMMENT:
@@ -112,13 +113,13 @@ const dispatchToken = chatDispatcher.register(function(action) {
 			// _fbCommentReference.push(comment, function() {
 			// 	editActions.exitEditReplyMode();
 			// });
-			firebaseInst.push(comment, () => editActions.exitEditReplyMode());
+			_firebaseInst.push(comment, () => editActions.exitEditReplyMode());
 			break;
 
 		case actionTypes.DELETE_COMMENT:
 			//not removing comment. We will mark as deleted but keep the comment
 			// _fbCommentReference.child(action.commentId).update({deleted:true})
-			firebaseInst.update({deleted: true}, action.commentId);
+			_firebaseInst.update({deleted: true}, action.commentId);
 			break;
 
 		case actionTypes.EDIT_COMMENT: 
@@ -127,12 +128,15 @@ const dispatchToken = chatDispatcher.register(function(action) {
 			var {author, text} = action.comment;
 			var comment = {author, text, editedDate: timeStamp}
 			// _fbCommentReference.child(action.comment.id).update(comment);
-			firebaseInst.update(comment, action.comment.id);
+			_firebaseInst.update(comment, action.comment.id);
 			break;
 		default:
 	}
 })
 
-tokenStoreProvider.registerToken('fireBaseCommentStore', dispatchToken)
+	tokenStoreProvider.registerToken('fireBaseCommentStore', dispatchToken)
+}
+
+
 
 export default FirebaseStore

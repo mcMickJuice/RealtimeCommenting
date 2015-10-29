@@ -6,6 +6,11 @@ import EditStore from '../store/editStore'
 import FireBaseCommentStore from '../store/fireBaseCommentStore'
 import CommentActions from '../actions/commentActionCreators'
 
+var refUrl = 'https://live-comments.firebaseio.com/comments';
+
+new FireBaseCommentStore(refUrl)
+	.startListening();
+
 function getStateFromStores() {
 	return {
 		treeComments: CommentStore.getCommentTree(),
