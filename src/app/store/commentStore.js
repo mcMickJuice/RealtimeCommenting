@@ -49,7 +49,7 @@ function _pushOrUpdateComment(newComment) {
 		_pushComment(newComment);
 	}
 }
-
+ 
 var _commentsList = [];
 
 var CommentStore = assign({}, EventEmitter.prototype, {

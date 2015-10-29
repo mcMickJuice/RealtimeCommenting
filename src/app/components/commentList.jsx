@@ -2,7 +2,14 @@ import React from 'react'
 import Comment from './comment.jsx'
 import '../styles/commentList.less'
 
+var propTypes = React.PropTypes;
+
 var CommentList = React.createClass({
+	propTypes: {
+		data: propTypes.array,
+		deleteComment: propTypes.func.isRequired,
+		editState: propTypes.object
+	},
 
 	buildTree: function() {
 		var tree = this.props.data;

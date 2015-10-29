@@ -1,10 +1,12 @@
 import React from 'react'
-//import CommentStore from './store/commentStore.js'
-import commentActionCreator from '../actions/commentActionCreators'
 
-var initialState = {text: ''};
+var initialState = {text: ''},
+	propTypes = React.PropTypes;
 
 var CommentForm = React.createClass({
+	propTypes: {
+		submitAction: propTypes.func.isRequired
+	},
 	getInitialState: function() {
 		return initialState;
 	},
@@ -23,7 +25,7 @@ var CommentForm = React.createClass({
 		this.refs.author.value = '';
 		this.refs.commentText.value = '';
 		this.resetState();
-		commentActionCreator.sendComment(text, author);
+		this.props.submitAction(text, author);
 		return;
 	},
 	handleTextChange: function(e) {

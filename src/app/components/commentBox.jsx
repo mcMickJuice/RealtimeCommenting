@@ -49,7 +49,7 @@ var CommentBox = React.createClass({
 		return (
 <div className="commentBox">
 	<h1>Comments</h1>
-	<CommentForm />
+	<CommentForm submitAction={CommentActions.sendComment}/>
 	{commentList}
 </div>
 			);

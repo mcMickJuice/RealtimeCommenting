@@ -5,12 +5,24 @@ import ReplyComment from './replyComment.jsx'
 import _ from 'lodash'
 import '../styles/comment.less'
 
+var propTypes = React.PropTypes;
+
 function _formatDate(milliseconds) {
 		var date  = new Date(milliseconds);
 		return date.toLocaleString();
 }
 
 var Comment = React.createClass({
+	propTypes: {
+		comment: propTypes.shape({
+			text: propTypes.string.isRequired,
+			author:propTypes.string.isRequired,
+			appId: propTypes.number,
+			id: propTypes.string,
+			createdDate: propTypes.number.isRequired,
+			editedDate: propTypes.number
+		})
+	},
 	rawMarkup: function() {
 		var rawMarkup = marked(this.props.comment.text, {sanitize:true});
 		return { __html: rawMarkup};

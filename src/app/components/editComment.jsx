@@ -5,7 +5,7 @@ import CommentActions from '../actions/commentActionCreators'
 import _ from 'lodash'
 //edit Store to listen for edit state update
 
-var ReactPropTypes = React.PropTypes;
+var propTypes = React.PropTypes;
 var EDIT_MODE = CommentConstants.modeTypes.EDIT_MODE;
 
 function getStateFromStores() {
@@ -15,10 +15,12 @@ function getStateFromStores() {
 }
 
 var EditComment = React.createClass({
-  //TODO require that message is passed in!
   propTypes: {
-    comment: ReactPropTypes.object.isRequired,
-    editState: ReactPropTypes.object.isRequired
+    comment: propTypes.shape({
+      text: propTypes.string,
+      id: propTypes.string
+    }).isRequired,
+    editState: propTypes.object.isRequired
   },
   getInitialState: function() {
     var text = this.props.comment.text;
