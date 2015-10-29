@@ -46,7 +46,10 @@ function nextTick(callback) {
 	setTimeout(callback,0);
 }
 
+function noop(){}
+
 export default {
 	createTreeFromFlatList,
-	nextTick
+	nextTick,
+	noop
 }
