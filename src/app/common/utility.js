@@ -48,8 +48,13 @@ function nextTick(callback) {
 
 function noop(){}
 
+function getUniqueId() {
+	return new Date().getTime();
+}
+
 export default {
 	createTreeFromFlatList,
 	nextTick,
-	noop
+	noop,
+	getUniqueId
 }

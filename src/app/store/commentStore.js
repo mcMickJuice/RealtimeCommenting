@@ -3,7 +3,7 @@ import commentConstants from '../constants/commentConstants'
 import {EventEmitter} from 'events'
 import assign from 'object-assign'
 import _ from 'lodash'
-import {createTreeFromFlatList} from '../common/utility'
+import {createTreeFromFlatList, getUniqueId} from '../common/utility'
 import tokenStoreProvider from './dispatchTokenStoreProvider'
 
 var actionTypes = commentConstants.actionTypes;
@@ -79,10 +79,10 @@ var CommentStore = assign({}, EventEmitter.prototype, {
 const dispatchToken = chatDispatcher.register(function(action) {
 	switch(action.type) {
 		case actionTypes.SEND_COMMENT:
-			var timeStamp = new Date().getTime();
+			var clientId = getUniqueId();
 			//append this on action to flow to next store that needs it (e.g. firebase store)?
-			action.clientId = timeStamp;
-			action.createdDate = timeStamp
+			action.clientId = clientId;
+			action.createdDate = clientId
 			var {text, author, clientId, createdDate} = action;
 
 			_pushComment({text, 
@@ -92,9 +92,9 @@ const dispatchToken = chatDispatcher.register(function(action) {
 			break;
 
 		case actionTypes.REPLY_TO_COMMENT:
-			var timeStamp = new Date().getTime();
-			action.comment.clientId = timeStamp;
-			action.comment.createdDate = timeStamp;
+			var clientId = getUniqueId();
+			action.comment.clientId = clientId;
+			action.comment.createdDate = new Date().getTime();
 			var {text, author, clientId, createdDate, parentId} = action.comment;
 
 			var comment = {text, author, clientId, createdDate, parentId}
