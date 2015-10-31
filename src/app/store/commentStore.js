@@ -3,8 +3,11 @@ import commentConstants from '../constants/commentConstants'
 import {EventEmitter} from 'events'
 import assign from 'object-assign'
 import _ from 'lodash'
-import {createTreeFromFlatList, getUniqueId} from '../common/utility'
+import utility from '../common/utility'
 import tokenStoreProvider from './dispatchTokenStoreProvider'
+
+//needed for rewire to work in tests. import {} deconstruction pattern doesn't seem to work...
+var {createTreeFromFlatList, getUniqueId} = utility
 
 var actionTypes = commentConstants.actionTypes;
 var CHANGE_EVENT = commentConstants.eventTypes.CHANGE_EVENT;
