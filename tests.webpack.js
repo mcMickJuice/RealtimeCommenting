@@ -8,7 +8,8 @@ context.keys().forEach(context);
 var projectContext = require.context('./src', true, /((?!-spec).)*.jsx?$/);
 
 // Extract the module ids that Webpack uses to track modules
-var projectModuleIds = projectContext.keys().map(module => String(projectContext.resolve(module)));
+var projectModuleIds = projectContext.keys()
+	.map(module => String(projectContext.resolve(module)));
 
 beforeEach(() => {
 	//Remove our modules from the require cache before each test case

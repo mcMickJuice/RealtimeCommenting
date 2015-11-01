@@ -10,8 +10,8 @@
     "marked": "^0.3.5",
     "object-assign": "^4.0.1",
     "q": "^1.4.1",
-    "react": "^0.14.0",
-    "react-dom": "^0.14.0"
+    "react": "^0.14.1",
+    "react-dom": "^0.14.1"
   },
   "devDependencies": {
     "babel-core": "^5.8.25",
@@ -28,6 +28,7 @@
     "less": "^2.5.3",
     "less-loader": "^2.2.1",
     "phantomjs": "^1.9.18",
+    "react-addons-test-utils": "^0.14.1",
     "rewire": "^2.3.4",
     "rewire-webpack": "^1.0.0",
     "style-loader": "^0.12.4",
